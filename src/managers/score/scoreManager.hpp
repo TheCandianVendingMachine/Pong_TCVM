@@ -15,10 +15,14 @@ class scoreManager
             std::unordered_map<std::string, score> _scores;
 
         public:
+            /* add new score to be tracked */
             void addNewScore(const std::string &name, sf::Vector2f pos);
+            /* increment wanted score */
             void incrementScore(const std::string &name);
 
+            /* return wanted score by pointer */
             score* getScore(const std::string &name);
 
+            /* render all scores */
             void render(sf::RenderWindow &app);
     };

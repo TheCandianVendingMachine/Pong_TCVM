@@ -9,7 +9,7 @@
 
 #include <SFML/Graphics.hpp>
 
-gameState::gameState(sf::Vector2u windowSize) : _maxScore(10)
+gameState::gameState(sf::Vector2u windowSize, const int maxScore) : _maxScore(maxScore)
     {
         const int distanceFromWall = 30;
         _state = PLAYER_AI_GAME_STATE;

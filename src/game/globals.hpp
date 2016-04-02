@@ -2,6 +2,8 @@
 // all global variables needed
 #pragma once
 
+#include "../states/stateMachine.hpp"
+
 #include "../managers/resourceManager.hpp"
 #include "../managers/input/inputManager.hpp"
 #include "../states/states.hpp"
@@ -12,6 +14,8 @@
 class globals
     {
         public:
+            static stateMachine _stateMachine;
+
             static resourceManager<sf::Texture> _textureManager;
             static resourceManager<sf::Font> _fontManager;
 

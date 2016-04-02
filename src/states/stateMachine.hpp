@@ -4,23 +4,32 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Time.hpp>
-#include <deque>
+#include <stack>
 
 class state;
 
 class stateMachine
     {
         private:
-            std::deque<state*> _currentStates;
+            std::stack<state*> _currentStates;
+            state* _queuedState;
+
+            // handles input for the current tick
+            void handleInput(sf::RenderWindow &app);
+            // update the current state
+            void update(sf::Time deltaTime);
 
         public:
-            void addToQueue(state *newState);
-            void popOffQueue();
+            stateMachine();
+
+            void queueState(state *newState);
+            void pushState(state *newState);
+            void popState();
 
             state* getCurrentState() const;
 
-            // update the current state
-            void update(sf::Time deltaTime);
+            // handles current tick
+            void tick(sf::RenderWindow &app, sf::Time deltaTime);
             // render the current state
             void render(sf::RenderWindow &app);
     };

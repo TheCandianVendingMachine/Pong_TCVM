@@ -4,26 +4,16 @@
 
 #include "../states/gameState.hpp"
 
-void game::handleInput(sf::RenderWindow &app)
+void game::initializeWindow()
     {
-        sf::Event event;
-        while (app.pollEvent(event))
-            {
-                switch (event.type)
-                    {
-                        case sf::Event::Closed:
-                            app.close();
-                            break;
-                        case sf::Event::KeyPressed:
-                            globals::_inputManager.handleInput(event.key.code);
-                            break;
-                        default:
-                            break;
-                    }
-            }
+        app = new sf::RenderWindow(sf::VideoMode(1200, 700), "Pong", sf::Style::Close);
+        app->setFramerateLimit(60.0f);
     }
 
-void game::initializeResources()
+void game::initializeSounds()
+    {}
+
+void game::initializeTextures()
     {
         globals::_textureManager.add("assets/textures/paddle.png", "paddleTexture");
         globals::_textureManager.add("assets/textures/ball.png", "ballTexture");
@@ -31,14 +21,19 @@ void game::initializeResources()
         globals::_fontManager.add("assets/font/Squares_Bold_Free.otf", "gameFont");
     }
 
+void game::cleanup()
+    {
+        delete app;
+        app = nullptr;
+    }
+
 void game::start()
     {
-        initializeResources();
+        initializeWindow();
+        initializeTextures();
+        initializeSounds();
 
-        sf::RenderWindow app(sf::VideoMode(1200, 700), "Pong", sf::Style::Close);
-        app.setFramerateLimit(60.0f);
-
-        _stateMachine.addToQueue(new gameState(app.getSize()));
+        globals::_stateMachine.queueState(new gameState(app->getSize(), 10));
 
         sf::Clock deltaClock; 
         deltaClock.restart();
@@ -48,7 +43,7 @@ void game::start()
         sf::Time currentTime = deltaClock.getElapsedTime();
         float accumulator = 0.0f;
 
-        while (app.isOpen())
+        while (app->isOpen())
             {
                 sf::Time newTime = deltaClock.getElapsedTime();
                 sf::Time deltaTime = newTime - currentTime;
@@ -58,11 +53,12 @@ void game::start()
 
                 while (accumulator >= updateTime)
                     {
-                        handleInput(app);
-                        _stateMachine.update(deltaTime);
+                        globals::_stateMachine.tick(*app, deltaTime);
                         accumulator -= updateTime;
                     }
 
-                _stateMachine.render(app);
+                globals::_stateMachine.render(*app);
             }
+
+        cleanup();
     }

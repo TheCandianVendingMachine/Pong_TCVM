@@ -1,5 +1,5 @@
 // game.hpp
-// game loop
+// the game loop. Initializes the window and resources that will be used in the game
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -9,12 +9,15 @@
 class game
     {
         private:
-            stateMachine _stateMachine;
+            sf::RenderWindow *app;
 
-            void handleInput(sf::RenderWindow &app);
+            void initializeWindow();
+            void initializeSounds();
+            void initializeTextures();
 
-            void initializeResources();
+            void cleanup();
 
         public:
             void start();
+
     };

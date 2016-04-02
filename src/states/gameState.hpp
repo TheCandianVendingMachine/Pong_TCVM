@@ -37,7 +37,7 @@ class gameState : public state
 
         public:
             gameState() = default;
-            gameState(sf::Vector2u windowSize);
+            gameState(sf::Vector2u windowSize, const int maxScore);
             
             void render(sf::RenderWindow &app);
             void update(sf::Time deltaTime);
