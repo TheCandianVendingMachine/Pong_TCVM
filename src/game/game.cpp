@@ -21,6 +21,14 @@ void game::initializeTextures()
         globals::_fontManager.add("assets/font/Squares_Bold_Free.otf", "gameFont");
     }
 
+void game::initialize()
+    {
+        initializeWindow();
+        initializeTextures();
+        initializeSounds();
+
+    }
+
 void game::cleanup()
     {
         delete app;
@@ -29,11 +37,9 @@ void game::cleanup()
 
 void game::start()
     {
-        initializeWindow();
-        initializeTextures();
-        initializeSounds();
+        initialize();
 
-        globals::_stateMachine.queueState(new gameState(app->getSize(), 10));
+        globals::_stateMachine.queueState(new gameState(app->getSize(), 10, gameState::E_V_E));
 
         sf::Clock deltaClock; 
         deltaClock.restart();

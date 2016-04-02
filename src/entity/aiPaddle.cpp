@@ -1,11 +1,14 @@
 #include "aiPaddle.hpp"
+#include "ball.hpp"
 
-aiPaddle::aiPaddle(float maxHeight, float minHeight, sf::Vector2f startPos) : paddle(maxHeight, minHeight, startPos)
-    {}
-
-void aiPaddle::updateBallPos(sf::Vector2f ballPos, sf::Vector2f ballImpulse, sf::Time deltaTime)
+aiPaddle::aiPaddle(float maxHeight, float minHeight, sf::Vector2f startPos, ball* currentBall) : paddle(maxHeight, minHeight, startPos)
     {
-        sf::Vector2f newBallPos = ballPos + ((ballImpulse * 20.2f) * deltaTime.asSeconds());
+        _ball = currentBall;
+    }
+
+void aiPaddle::update(sf::Time deltaTime)
+    {
+        sf::Vector2f newBallPos = _ball->getPosition() + ((_ball->getImpulse() * 20.2f) * deltaTime.asSeconds());
 
         if ((newBallPos.y < _minHeight || newBallPos.y > _maxHeight) &&
             // if the paddle position minus the ball position is less than zero, it means its on the left side of the screen
@@ -27,4 +30,15 @@ void aiPaddle::updateBallPos(sf::Vector2f ballPos, sf::Vector2f ballImpulse, sf:
             {
                 _impulse.y = 0.f;
             }
+
+        if (_sprite.getPosition().y + _sprite.getLocalBounds().height > _maxHeight)
+            {
+                _sprite.setPosition(_sprite.getPosition().x, _maxHeight - _sprite.getLocalBounds().height);
+            }
+        else if (_sprite.getPosition().y < _minHeight)
+            {
+                _sprite.setPosition(_sprite.getPosition().x, _minHeight);
+            }
+
+        _sprite.move(_impulse * deltaTime.asSeconds());
     }

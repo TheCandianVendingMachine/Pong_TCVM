@@ -50,7 +50,7 @@ void stateMachine::tick(sf::RenderWindow &app, sf::Time deltaTime)
         update(deltaTime);
     }
 
-void stateMachine::handleInput(sf::RenderWindow & app)
+void stateMachine::handleInput(sf::RenderWindow &app)
     {
         sf::Event event;
         while (app.pollEvent(event))
@@ -61,7 +61,6 @@ void stateMachine::handleInput(sf::RenderWindow & app)
                             app.close();
                             break;
                         case sf::Event::KeyPressed:
-                            globals::_inputManager.handleInput(event.key.code);
                             break;
                         default:
                             break;

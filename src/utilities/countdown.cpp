@@ -37,5 +37,5 @@ bool countdown::hasCountdownFinished()
                 return false;
             }
         
-        return true;
+        return false;
     }

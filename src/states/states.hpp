@@ -4,7 +4,5 @@
 
 enum states
     {
-        PLAYER_AI_GAME_STATE,
-        PLAYER_PLAYER_GAME_STATE,
-        AI_AI_GAME_STATE,
+        GAME_STATE,
     };

@@ -4,11 +4,15 @@
 
 #include "paddle.hpp"
 
+class ball;
+
 class aiPaddle : public paddle
     {
-        public:
-            aiPaddle(float maxHeight, float minHeight, sf::Vector2f startPos);
+        private:
+            ball *_ball;
 
-            void updateBallPos(sf::Vector2f ballPos, sf::Vector2f ballImpulse, sf::Time deltaTime);
+        public:
+            aiPaddle(float maxHeight, float minHeight, sf::Vector2f startPos, ball* currentBall);
+            void update(sf::Time deltaTime);
 
     };

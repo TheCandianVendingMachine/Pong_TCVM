@@ -10,6 +10,4 @@ class player : public paddle
         public:
             player(float maxHeight, float minHeight, sf::Vector2f startPos);
 
-            void mapKeys(sf::Keyboard::Key up, sf::Keyboard::Key down);
-
     };

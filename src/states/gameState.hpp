@@ -17,11 +17,18 @@ class aiPaddle;
 
 class gameState : public state
     {
-        private:
-            player *_player;
-            aiPaddle *_opponent;
+        public:
+            enum gameMode
+                {
+                    E_V_E,
+                    P_V_E,
+                    P_V_P
+                };
 
-        protected:
+        private:
+            paddle *_home;
+            paddle *_away;
+
             scoreManager _scoreManager;
             ball *_ball;
 
@@ -35,9 +42,11 @@ class gameState : public state
             bool _gameOver;
             const int _maxScore;
 
+            gameMode _currentMode;
+
         public:
             gameState() = default;
-            gameState(sf::Vector2u windowSize, const int maxScore);
+            gameState(sf::Vector2u windowSize, const int maxScore, gameMode mode);
             
             void render(sf::RenderWindow &app);
             void update(sf::Time deltaTime);

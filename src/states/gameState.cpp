@@ -9,14 +9,33 @@
 
 #include <SFML/Graphics.hpp>
 
-gameState::gameState(sf::Vector2u windowSize, const int maxScore) : _maxScore(maxScore)
+gameState::gameState(sf::Vector2u windowSize, const int maxScore, gameState::gameMode mode) : _maxScore(maxScore)
     {
         const int distanceFromWall = 30;
-        _state = PLAYER_AI_GAME_STATE;
+        _state = GAME_STATE;
+        _currentMode = mode;
 
-        _player = new player(windowSize.y, 0, sf::Vector2f(distanceFromWall, windowSize.y / 2));
-        _opponent = new aiPaddle(windowSize.y, 0, sf::Vector2f((windowSize.x - distanceFromWall), windowSize.y / 2));
+
         _ball = new ball(windowSize);
+
+        switch (_currentMode)
+            {
+                case gameState::E_V_E:
+                    _home = new aiPaddle(windowSize.y, 0, sf::Vector2f(distanceFromWall, windowSize.y / 2), _ball);
+                    _away = new aiPaddle(windowSize.y, 0, sf::Vector2f((windowSize.x - distanceFromWall), windowSize.y / 2), _ball);
+                    break;
+                case gameState::P_V_E:
+                    _home = new player(windowSize.y, 0, sf::Vector2f(distanceFromWall, windowSize.y / 2));
+                    _away = new aiPaddle(windowSize.y, 0, sf::Vector2f((windowSize.x - distanceFromWall), windowSize.y / 2), _ball);
+                    break;
+                case gameState::P_V_P:
+                    _home = new player(windowSize.y, 0, sf::Vector2f(distanceFromWall, windowSize.y / 2));
+                    _away = new player(windowSize.y, 0, sf::Vector2f((windowSize.x - distanceFromWall), windowSize.y / 2));
+                    break;
+                default:
+                    break;
+            }
+        
 
         _goalLeft = sf::Vector2f(0, 0);
         _goalRight = sf::Vector2f(windowSize.x, windowSize.y);
@@ -34,8 +53,8 @@ gameState::gameState(sf::Vector2u windowSize, const int maxScore) : _maxScore(ma
 
 void gameState::render(sf::RenderWindow &app)
     {
-        _player->draw(app);
-        _opponent->draw(app);
+        _home->draw(app);
+        _away->draw(app);
         _ball->draw(app);
         _scoreManager.render(app);
 
@@ -49,13 +68,13 @@ void gameState::update(sf::Time deltaTime)
     {
         if (!_gameOver)
             {
-                _player->update(deltaTime);
+                _home->update(deltaTime);
 
-                _opponent->updateBallPos(_ball->getPosition(), _ball->getImpulse(), deltaTime);
-                _opponent->update(deltaTime);
+                //_away->updateBallPos(_ball->getPosition(), _ball->getImpulse(), deltaTime);
+                _away->update(deltaTime);
 
-                _ball->collide(*_player->getSprite());
-                _ball->collide(*_opponent->getSprite());
+                _ball->collide(*_home->getSprite());
+                _ball->collide(*_away->getSprite());
                 _ball->update(deltaTime);
             }
 
@@ -91,19 +110,24 @@ void gameState::update(sf::Time deltaTime)
                 if (!_gameOver)
                     {
                         _ball->initialize();
-                        _player->initialize();
-                        _opponent->initialize();
+                        _home->initialize();
+                        _away->initialize();
                     }
+            }
+
+        if (_endGameCountdown.hasCountdownFinished() && _gameOver)
+            {
+                globals::_stateMachine.popState();
             }
     }
 
 gameState::~gameState()
     {
-        delete _player;
-        delete _opponent;
+        delete _home;
+        delete _away;
         delete _ball;
 
-        _player = nullptr;
-        _opponent = nullptr;
+        _home = nullptr;
+        _away = nullptr;
         _ball = nullptr;
     }
