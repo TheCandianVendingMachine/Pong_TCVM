@@ -27,10 +27,13 @@ class gameState : public state
 
             countdown _endGameCountdown;
 
-            sf::Text _score;
+            sf::Text _gameOverText;
 
             sf::Vector2f _goalLeft;
             sf::Vector2f _goalRight;
+
+            bool _gameOver;
+            const int _maxScore;
 
         public:
             gameState() = default;

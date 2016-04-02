@@ -5,7 +5,11 @@
 #include "../entity/ball.hpp"
 #include "../entity/player.hpp"
 
-gameState::gameState(sf::Vector2u windowSize)
+#include "../game/globals.hpp"
+
+#include <SFML/Graphics.hpp>
+
+gameState::gameState(sf::Vector2u windowSize) : _maxScore(10)
     {
         const int distanceFromWall = 30;
         _state = PLAYER_AI_GAME_STATE;
@@ -22,6 +26,10 @@ gameState::gameState(sf::Vector2u windowSize)
 
         _scoreManager.addNewScore("rightGoal", sf::Vector2f((windowSize.x / 2) + 60, 30));
         _scoreManager.getScore("rightGoal")->getText().setCharacterSize(64);
+
+        _gameOverText.setFont(*globals::_fontManager.get("gameFont"));
+        _gameOverText.setCharacterSize(70);
+        _gameOverText.setPosition(windowSize.x / 2, windowSize.y / 2);
     }
 
 void gameState::render(sf::RenderWindow &app)
@@ -30,40 +38,61 @@ void gameState::render(sf::RenderWindow &app)
         _opponent->draw(app);
         _ball->draw(app);
         _scoreManager.render(app);
+
+        if (_gameOver)
+            {
+                app.draw(_gameOverText);
+            }
     }
 
 void gameState::update(sf::Time deltaTime)
     {
-        _player->update(deltaTime);
-
-        _opponent->updateBallPos(_ball->getPosition(), _ball->getImpulse(), deltaTime);
-        _opponent->update(deltaTime);
-
-        _ball->collide(*_player->getSprite());
-        _ball->collide(*_opponent->getSprite());
-        _ball->update(deltaTime);
-
-        if (_ball->getPosition().x < _goalLeft.x || _ball->getPosition().x > _goalRight.x)
+        if (!_gameOver)
             {
-                _ball->initialize();
-                _player->initialize();
-                _opponent->initialize();
+                _player->update(deltaTime);
 
-                if (_ball->getPosition().x < _goalLeft.x)
+                _opponent->updateBallPos(_ball->getPosition(), _ball->getImpulse(), deltaTime);
+                _opponent->update(deltaTime);
+
+                _ball->collide(*_player->getSprite());
+                _ball->collide(*_opponent->getSprite());
+                _ball->update(deltaTime);
+            }
+
+        if ((_ball->getPosition().x < _goalLeft.x || _ball->getPosition().x > _goalRight.x) && !_gameOver)
+            {
+                if (_ball->getPosition().x > _goalRight.x)
                     {
                         _scoreManager.incrementScore("leftGoal");
-                        if (_scoreManager.getScore("leftGoal")->getScore() >= 10)
+                        if (_scoreManager.getScore("leftGoal")->getScore() >= _maxScore)
                             {
-                                
+                                _gameOverText.setString("Left Wins!");
+                                _gameOver = true;
+                                _endGameCountdown.start(sf::seconds(3));
+
+                                _gameOverText.setPosition(_gameOverText.getPosition().x - (_gameOverText.getLocalBounds().width / 2),
+                                                          _gameOverText.getPosition().y - (_gameOverText.getLocalBounds().height / 2));
                             }
                     }
                 else
                     {
                         _scoreManager.incrementScore("rightGoal");
-                        if (_scoreManager.getScore("rightGoal")->getScore() >= 10)
+                        if (_scoreManager.getScore("rightGoal")->getScore() >= _maxScore)
                             {
-                                
+                                _gameOverText.setString("Right Wins!");
+                                _gameOver = true;
+                                _endGameCountdown.start(sf::seconds(3));
+
+                                _gameOverText.setPosition(_gameOverText.getPosition().x - (_gameOverText.getLocalBounds().width / 2),
+                                                          _gameOverText.getPosition().y - (_gameOverText.getLocalBounds().height / 2));
                             }
+                    }
+
+                if (!_gameOver)
+                    {
+                        _ball->initialize();
+                        _player->initialize();
+                        _opponent->initialize();
                     }
             }
     }
