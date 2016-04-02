@@ -39,7 +39,7 @@ void game::start()
     {
         initialize();
 
-        globals::_stateMachine.queueState(new gameState(app->getSize(), 10, gameState::E_V_E));
+        globals::_stateMachine.queueState(new gameState(app->getSize(), 1000, gameState::E_V_E));
 
         sf::Clock deltaClock; 
         deltaClock.restart();
@@ -59,7 +59,10 @@ void game::start()
 
                 while (accumulator >= updateTime)
                     {
-                        globals::_stateMachine.tick(*app, deltaTime);
+                        if (app->hasFocus())
+                            {
+                                globals::_stateMachine.tick(*app, deltaTime);
+                            }
                         accumulator -= updateTime;
                     }
 

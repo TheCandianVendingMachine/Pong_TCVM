@@ -21,12 +21,12 @@ gameState::gameState(sf::Vector2u windowSize, const int maxScore, gameState::gam
         switch (_currentMode)
             {
                 case gameState::E_V_E:
-                    _home = new aiPaddle(windowSize.y, 0, sf::Vector2f(distanceFromWall, windowSize.y / 2), _ball);
-                    _away = new aiPaddle(windowSize.y, 0, sf::Vector2f((windowSize.x - distanceFromWall), windowSize.y / 2), _ball);
+                    _home = new aiPaddle(windowSize.y, 0, sf::Vector2f(distanceFromWall, windowSize.y / 2), _ball, aiPaddle::MEDIUM);
+                    _away = new aiPaddle(windowSize.y, 0, sf::Vector2f((windowSize.x - distanceFromWall), windowSize.y / 2), _ball, aiPaddle::HARD);
                     break;
                 case gameState::P_V_E:
                     _home = new player(windowSize.y, 0, sf::Vector2f(distanceFromWall, windowSize.y / 2));
-                    _away = new aiPaddle(windowSize.y, 0, sf::Vector2f((windowSize.x - distanceFromWall), windowSize.y / 2), _ball);
+                    _away = new aiPaddle(windowSize.y, 0, sf::Vector2f((windowSize.x - distanceFromWall), windowSize.y / 2), _ball, aiPaddle::MEDIUM);
                     break;
                 case gameState::P_V_P:
                     _home = new player(windowSize.y, 0, sf::Vector2f(distanceFromWall, windowSize.y / 2));

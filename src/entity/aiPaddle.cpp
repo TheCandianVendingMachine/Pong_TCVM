@@ -1,14 +1,31 @@
 #include "aiPaddle.hpp"
 #include "ball.hpp"
 
-aiPaddle::aiPaddle(float maxHeight, float minHeight, sf::Vector2f startPos, ball* currentBall) : paddle(maxHeight, minHeight, startPos)
+aiPaddle::aiPaddle(float maxHeight, float minHeight, sf::Vector2f startPos, ball* currentBall, difficulty hardness) : paddle(maxHeight, minHeight, startPos)
     {
         _ball = currentBall;
+        _difficulty = hardness;
+
+        switch (_difficulty)
+            {
+                case aiPaddle::EASY:
+                    _accuracy = 10.00f;
+                    break;
+                case aiPaddle::MEDIUM:
+                    _accuracy = 20.00;
+                    break;
+                case aiPaddle::HARD:
+                    _accuracy = 40.00f;
+                    break;
+                default:
+                    _accuracy = 20.00f;
+                    break;
+            }
     }
 
 void aiPaddle::update(sf::Time deltaTime)
     {
-        sf::Vector2f newBallPos = _ball->getPosition() + ((_ball->getImpulse() * 20.2f) * deltaTime.asSeconds());
+        sf::Vector2f newBallPos = _ball->getPosition() + ((_ball->getImpulse() * _accuracy) * deltaTime.asSeconds());
 
         if ((newBallPos.y < _minHeight || newBallPos.y > _maxHeight) &&
             // if the paddle position minus the ball position is less than zero, it means its on the left side of the screen
