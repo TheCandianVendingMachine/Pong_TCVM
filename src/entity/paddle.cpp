@@ -7,9 +7,16 @@ paddle::paddle(float maxHeight, float minHeight, sf::Vector2f startPos) : _speed
         _minHeight = minHeight;
         _maxHeight = maxHeight;
 
-        _sprite.setTexture(*globals::_textureManager.addTexture("assets/textures/paddle.png", "paddleTexture"));
+        _sprite.setTexture(*globals::_textureManager.get("paddleTexture"));
 
-        _sprite.setPosition(startPos);
+        _startPos = startPos;
+
+        initialize();
+    }
+
+void paddle::initialize()
+    {
+        _sprite.setPosition(_startPos - sf::Vector2f(_sprite.getLocalBounds().width / 2, _sprite.getLocalBounds().height / 2));
         _impulse = sf::Vector2f(0, 0);
     }
 

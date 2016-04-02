@@ -23,8 +23,18 @@ void game::handleInput(sf::RenderWindow &app)
             }
     }
 
+void game::initializeResources()
+    {
+        globals::_textureManager.add("assets/textures/paddle.png", "paddleTexture");
+        globals::_textureManager.add("assets/textures/ball.png", "ballTexture");
+
+        globals::_fontManager.add("assets/font/Squares_Bold_Free.otf", "gameFont");
+    }
+
 void game::start()
     {
+        initializeResources();
+
         sf::RenderWindow app(sf::VideoMode(1200, 700), "Pong", sf::Style::Close);
         app.setFramerateLimit(60.0f);
 

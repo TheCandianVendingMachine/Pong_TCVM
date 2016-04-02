@@ -10,16 +10,17 @@ ball::ball(sf::Vector2u windowSize)
     _maxBounceAngle(75.0f)
     {
         _sprite.setOrigin(_sprite.getLocalBounds().width / 2, _sprite.getLocalBounds().height / 2);
-        initialize(windowSize);
+        _startPos = sf::Vector2f(windowSize.x / 2, windowSize.y / 2);
+        initialize();
 
         _windowSize = windowSize;
 
-        _sprite.setTexture(*globals::_textureManager.addTexture("assets/textures/ball.png", "ballTexture"));
+        _sprite.setTexture(*globals::_textureManager.get("ballTexture"));
     }
 
-void ball::initialize(sf::Vector2u windowSize)
+void ball::initialize()
     {
-        _sprite.setPosition(windowSize.x / 2, windowSize.y / 2);
+        _sprite.setPosition(_startPos);
         _impulse = sf::Vector2f(_speed, 0);
     }
 

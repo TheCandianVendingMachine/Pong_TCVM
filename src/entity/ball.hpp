@@ -7,6 +7,7 @@
 class ball : public entity
     {
             sf::Vector2u _windowSize;
+            sf::Vector2f _startPos;
 
             const float _speed;
             const float _minSpeed;
@@ -14,7 +15,7 @@ class ball : public entity
 
         public:
             ball(sf::Vector2u windowSize);
-            void initialize(sf::Vector2u windowSize);
+            void initialize();
 
             void update(sf::Time deltaTime);
 

@@ -1,5 +1,6 @@
 #include "gameState.hpp"
 
+#include "../entity/paddle.hpp"
 #include "../entity/aiPaddle.hpp"
 #include "../entity/ball.hpp"
 #include "../entity/player.hpp"
@@ -15,6 +16,12 @@ gameState::gameState(sf::Vector2u windowSize)
 
         _goalLeft = sf::Vector2f(0, 0);
         _goalRight = sf::Vector2f(windowSize.x, windowSize.y);
+
+        _scoreManager.addNewScore("leftGoal", sf::Vector2f((windowSize.x / 2) - 60, 30));
+        _scoreManager.getScore("leftGoal")->getText().setCharacterSize(64);
+
+        _scoreManager.addNewScore("rightGoal", sf::Vector2f((windowSize.x / 2) + 60, 30));
+        _scoreManager.getScore("rightGoal")->getText().setCharacterSize(64);
     }
 
 void gameState::render(sf::RenderWindow &app)
@@ -22,6 +29,7 @@ void gameState::render(sf::RenderWindow &app)
         _player->draw(app);
         _opponent->draw(app);
         _ball->draw(app);
+        _scoreManager.render(app);
     }
 
 void gameState::update(sf::Time deltaTime)
@@ -37,7 +45,26 @@ void gameState::update(sf::Time deltaTime)
 
         if (_ball->getPosition().x < _goalLeft.x || _ball->getPosition().x > _goalRight.x)
             {
-                _ball->initialize(sf::Vector2u(_goalRight.x, _goalRight.y));
+                _ball->initialize();
+                _player->initialize();
+                _opponent->initialize();
+
+                if (_ball->getPosition().x < _goalLeft.x)
+                    {
+                        _scoreManager.incrementScore("leftGoal");
+                        if (_scoreManager.getScore("leftGoal")->getScore() >= 10)
+                            {
+                                
+                            }
+                    }
+                else
+                    {
+                        _scoreManager.incrementScore("rightGoal");
+                        if (_scoreManager.getScore("rightGoal")->getScore() >= 10)
+                            {
+                                
+                            }
+                    }
             }
     }
 

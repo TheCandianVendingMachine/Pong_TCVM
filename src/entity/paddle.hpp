@@ -7,6 +7,8 @@
 class paddle : public entity
     {
         protected:
+            sf::Vector2f _startPos;
+
             float _minHeight;
             float _maxHeight;
 
@@ -14,6 +16,8 @@ class paddle : public entity
 
         public:
             paddle(float maxHeight, float minHeight, sf::Vector2f startPos);
+            void initialize();
+
             void update(sf::Time deltaTime);
 
     };

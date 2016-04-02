@@ -13,6 +13,8 @@ class game
 
             void handleInput(sf::RenderWindow &app);
 
+            void initializeResources();
+
         public:
             void start();
     };
