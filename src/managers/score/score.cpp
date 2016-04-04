@@ -15,6 +15,11 @@ void score::increment()
         _text.setString(std::to_string(_score));
     }
 
+void score::setScore(int amount)
+    {
+        _score = amount;
+    }
+
 int score::getScore() const
     {
         return _score;

@@ -5,4 +5,5 @@
 enum states
     {
         GAME_STATE,
+        MENU_STATE,
     };

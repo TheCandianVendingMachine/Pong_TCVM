@@ -11,34 +11,17 @@
 
 gameState::gameState(sf::Vector2u windowSize, const int maxScore, gameState::gameMode mode) : _maxScore(maxScore)
     {
-        const int distanceFromWall = 30;
         _state = GAME_STATE;
         _currentMode = mode;
 
-
-        _ball = new ball(windowSize);
-
-        switch (_currentMode)
-            {
-                case gameState::E_V_E:
-                    _home = new aiPaddle(windowSize.y, 0, sf::Vector2f(distanceFromWall, windowSize.y / 2), _ball, aiPaddle::MEDIUM);
-                    _away = new aiPaddle(windowSize.y, 0, sf::Vector2f((windowSize.x - distanceFromWall), windowSize.y / 2), _ball, aiPaddle::HARD);
-                    break;
-                case gameState::P_V_E:
-                    _home = new player(windowSize.y, 0, sf::Vector2f(distanceFromWall, windowSize.y / 2));
-                    _away = new aiPaddle(windowSize.y, 0, sf::Vector2f((windowSize.x - distanceFromWall), windowSize.y / 2), _ball, aiPaddle::MEDIUM);
-                    break;
-                case gameState::P_V_P:
-                    _home = new player(windowSize.y, 0, sf::Vector2f(distanceFromWall, windowSize.y / 2));
-                    _away = new player(windowSize.y, 0, sf::Vector2f((windowSize.x - distanceFromWall), windowSize.y / 2));
-                    break;
-                default:
-                    break;
-            }
-        
+        _renderOvertop = false;
+        _updateUnderneath = false;
+        _isInitialized = false;
 
         _goalLeft = sf::Vector2f(0, 0);
         _goalRight = sf::Vector2f(windowSize.x, windowSize.y);
+
+        _windowSize = windowSize;
 
         _scoreManager.addNewScore("leftGoal", sf::Vector2f((windowSize.x / 2) - 60, 30));
         _scoreManager.getScore("leftGoal")->getText().setCharacterSize(64);
@@ -49,6 +32,64 @@ gameState::gameState(sf::Vector2u windowSize, const int maxScore, gameState::gam
         _gameOverText.setFont(*globals::_fontManager.get("gameFont"));
         _gameOverText.setCharacterSize(70);
         _gameOverText.setPosition(windowSize.x / 2, windowSize.y / 2);
+
+        initialize();
+    }
+
+void gameState::initialize()
+    {
+        const int distanceFromWall = 30;
+        _isInitialized = true;
+
+        cleanup();
+        _ball = new ball(_windowSize);
+
+        _neverEnding = false;
+
+        switch (_currentMode)
+            {
+                case gameState::E_V_E:
+                    _home = new aiPaddle(_windowSize.y, 0, sf::Vector2f(distanceFromWall, _windowSize.y / 2), _ball, aiPaddle::MEDIUM);
+                    _away = new aiPaddle(_windowSize.y, 0, sf::Vector2f((_windowSize.x - distanceFromWall), _windowSize.y / 2), _ball, aiPaddle::HARD);
+                    break;
+                case gameState::NEVER_ENDING_E_V_E:
+                    _home = new aiPaddle(_windowSize.y, 0, sf::Vector2f(distanceFromWall, _windowSize.y / 2), _ball, aiPaddle::MEDIUM);
+                    _away = new aiPaddle(_windowSize.y, 0, sf::Vector2f((_windowSize.x - distanceFromWall), _windowSize.y / 2), _ball, aiPaddle::HARD);
+                    _neverEnding = true;
+                    break;
+                ////////////////////////////////////////////////
+                case gameState::P_V_E:
+                    _home = new player(_windowSize.y, 0, sf::Vector2f(distanceFromWall, _windowSize.y / 2));
+                    _away = new aiPaddle(_windowSize.y, 0, sf::Vector2f((_windowSize.x - distanceFromWall), _windowSize.y / 2), _ball, aiPaddle::MEDIUM);
+                    break;
+                case gameState::NEVER_ENDING_P_V_E:
+                    _home = new player(_windowSize.y, 0, sf::Vector2f(distanceFromWall, _windowSize.y / 2));
+                    _away = new aiPaddle(_windowSize.y, 0, sf::Vector2f((_windowSize.x - distanceFromWall), _windowSize.y / 2), _ball, aiPaddle::MEDIUM);
+                    _neverEnding = true;
+                    break;
+                ///////////////////////////////////////////////
+                case gameState::P_V_P:
+                    _home = new player(_windowSize.y, 0, sf::Vector2f(distanceFromWall, _windowSize.y / 2));
+                    _away = new player(_windowSize.y, 0, sf::Vector2f((_windowSize.x - distanceFromWall), _windowSize.y / 2));
+                    break;
+                case gameState::NEVER_ENDING_P_V_P:
+                    _home = new player(_windowSize.y, 0, sf::Vector2f(distanceFromWall, _windowSize.y / 2));
+                    _away = new player(_windowSize.y, 0, sf::Vector2f((_windowSize.x - distanceFromWall), _windowSize.y / 2));
+                    _neverEnding = true;
+                    break;
+                default:
+                    break;
+            }
+
+        _scoreManager.resetScore("leftGoal");
+        _scoreManager.resetScore("rightGoal");
+
+        _gameOver = false;
+    }
+
+void gameState::setGameMode(gameMode mode)
+    {
+        _currentMode = mode;
     }
 
 void gameState::render(sf::RenderWindow &app)
@@ -83,7 +124,7 @@ void gameState::update(sf::Time deltaTime)
                 if (_ball->getPosition().x > _goalRight.x)
                     {
                         _scoreManager.incrementScore("leftGoal");
-                        if (_scoreManager.getScore("leftGoal")->getScore() >= _maxScore)
+                        if (_scoreManager.getScore("leftGoal")->getScore() >= _maxScore && !_neverEnding)
                             {
                                 _gameOverText.setString("Left Wins!");
                                 _gameOver = true;
@@ -96,7 +137,7 @@ void gameState::update(sf::Time deltaTime)
                 else
                     {
                         _scoreManager.incrementScore("rightGoal");
-                        if (_scoreManager.getScore("rightGoal")->getScore() >= _maxScore)
+                        if (_scoreManager.getScore("rightGoal")->getScore() >= _maxScore&& !_neverEnding)
                             {
                                 _gameOverText.setString("Right Wins!");
                                 _gameOver = true;
@@ -115,19 +156,36 @@ void gameState::update(sf::Time deltaTime)
                     }
             }
 
-        if (_endGameCountdown.hasCountdownFinished() && _gameOver)
+        if ((_endGameCountdown.hasCountdownFinished() && _gameOver))
             {
                 globals::_stateMachine.popState();
             }
     }
 
+void gameState::cleanup()
+    {
+        if (_home)
+            {
+                delete _home;
+                _home = nullptr;
+            }
+
+        if (_away)
+            {
+                delete _away;
+                _away = nullptr;
+            }
+
+        if (_ball)
+            {
+                delete _ball;
+                _ball = nullptr;
+            }
+
+        _isInitialized = false;
+    }
+
 gameState::~gameState()
     {
-        delete _home;
-        delete _away;
-        delete _ball;
-
-        _home = nullptr;
-        _away = nullptr;
-        _ball = nullptr;
+        cleanup();
     }

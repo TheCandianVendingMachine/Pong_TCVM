@@ -4,20 +4,25 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Time.hpp>
-#include <stack>
+#include <vector>
+#include <queue>
 
 class state;
 
 class stateMachine
     {
         private:
-            std::stack<state*> _currentStates;
-            state* _queuedState;
+            std::vector<state*> _currentStates;
+            std::queue<state*> _queuedState;
 
             // handles input for the current tick
             void handleInput(sf::RenderWindow &app);
             // update the current state
             void update(sf::Time deltaTime);
+
+            bool _popState;
+
+            void popStateFromStack();
 
         public:
             stateMachine();
@@ -25,11 +30,18 @@ class stateMachine
             void queueState(state *newState);
             void pushState(state *newState);
             void popState();
+            void reinitState();
 
             state* getCurrentState() const;
+            std::vector<state*> *getAllStates();
+            
+            state* getStateUnderneath();
 
             // handles current tick
             void tick(sf::RenderWindow &app, sf::Time deltaTime);
             // render the current state
             void render(sf::RenderWindow &app);
+
+            void cleanup();
+            ~stateMachine();
     };

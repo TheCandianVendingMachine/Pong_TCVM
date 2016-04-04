@@ -19,6 +19,8 @@ class scoreManager
             void addNewScore(const std::string &name, sf::Vector2f pos);
             /* increment wanted score */
             void incrementScore(const std::string &name);
+            /* reset the score */
+            void resetScore(const std::string &name);
 
             /* return wanted score by pointer */
             score* getScore(const std::string &name);

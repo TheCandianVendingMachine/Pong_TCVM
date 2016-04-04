@@ -4,34 +4,66 @@
 
 #include <SFML/Graphics.hpp>
 
+void stateMachine::popStateFromStack()
+    {
+        if (!_currentStates.empty())
+            {
+                // if the state isnt nullptr
+                if (_currentStates.back())
+                    {
+                        _currentStates.back()->cleanup();
+                        _currentStates.pop_back();
+                        _popState = false;
+                    }
+            }
+    }
+
 stateMachine::stateMachine()
     {
-        _queuedState = nullptr;
+        _popState = false;
     }
 
 void stateMachine::queueState(state *newState)
     {
-        _queuedState = newState;
+        _queuedState.push(newState);
     }
 
 void stateMachine::pushState(state *newState)
     {
-        _currentStates.push(newState);
+        _currentStates.push_back(newState);
+        _currentStates.back()->initialize();
     }
 
 void stateMachine::popState()
     {
-        if (!_currentStates.empty())
-            {
-                _currentStates.pop();
-            }
+        _popState = true;
+    }
+
+void stateMachine::reinitState()
+    {
+        _currentStates.back()->initialize();
     }
 
 state *stateMachine::getCurrentState() const
     {
         if (!_currentStates.empty())
             {
-                return _currentStates.top();
+                return _currentStates.back();
+            }
+
+        return nullptr;
+    }
+
+std::vector<state*> *stateMachine::getAllStates()
+    {
+        return &_currentStates;
+    }
+
+state *stateMachine::getStateUnderneath()
+    {
+        if (!_currentStates.empty() && _currentStates.size() > 1)
+            {
+                return _currentStates[_currentStates.size() - 2];
             }
 
         return nullptr;
@@ -39,11 +71,22 @@ state *stateMachine::getCurrentState() const
 
 void stateMachine::tick(sf::RenderWindow &app, sf::Time deltaTime)
     {
-        // this makes sure that a state isnt changed mid render / update
-        if (_queuedState)
+        // check if a state is popped
+        // We need this flag so a state isnt popped/cleaned up mid render/update. If it does happen, program crashes
+        if (_popState)
             {
-                pushState(_queuedState);
-                _queuedState = nullptr;
+                // if so, pop it off the stack
+                popStateFromStack();
+            }
+
+        // this makes sure that a state isnt changed mid render / update
+        if (!_queuedState.empty())
+            {
+                for (int i = (_queuedState.size() - 1); i >= 0; i--)
+                    {
+                        pushState(_queuedState.front());
+                        _queuedState.pop();
+                    }
             }
         
         handleInput(app);
@@ -70,18 +113,56 @@ void stateMachine::handleInput(sf::RenderWindow &app)
 
 void stateMachine::update(sf::Time deltaTime)
     {
-        if (_currentStates.size() > 0)
+        if (!_currentStates.empty())
             {
-                _currentStates.top()->update(deltaTime);
+                for (int i = (_currentStates.size() - 1); i >= 0; i--)
+                    {
+                        // update the state and check if they want to have underneath states update
+                        // if they dont want to update overtop, break out of the loop
+                        // if so, continue down the stack
+                        _currentStates[i]->update(deltaTime);
+                        if (!_currentStates[i]->updateUnderneath())
+                            {
+                                break;
+                            }
+                    }
             }
     }
 
 void stateMachine::render(sf::RenderWindow &app)
     {
         app.clear(sf::Color::Black);
-        if (_currentStates.size() > 0)
+        if (!_currentStates.empty())
             {
-                _currentStates.top()->render(app);
+                for (int i = (_currentStates.size() - 1); i >= 0; i--)
+                    {
+                        // render the state and check if they want to render overtop
+                        // if they dont want to render overtop, break out of the loop
+                        // if so, continue down the stack
+                        _currentStates[i]->render(app);
+                        if (!_currentStates[i]->renderOvertop())
+                            {
+                                break;
+                            }
+                    }
             }
         app.display();
+    }
+
+void stateMachine::cleanup()
+    {
+        for (auto &topState : _currentStates)
+            {
+                if (topState)
+                    {
+                        topState->cleanup();
+                        delete topState;
+                        topState = nullptr;
+                    }
+            }
+    }
+
+stateMachine::~stateMachine()
+    {
+        cleanup();
     }

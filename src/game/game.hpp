@@ -21,4 +21,6 @@ class game
         public:
             void start();
 
+            ~game();
+
     };

@@ -13,6 +13,11 @@ void scoreManager::incrementScore(const std::string &name)
         _scores[name].increment();
     }
 
+void scoreManager::resetScore(const std::string & name)
+    {
+        _scores[name].setScore(0);
+    }
+
 score *scoreManager::getScore(const std::string &name)
     {
         auto found = _scores.find(name);

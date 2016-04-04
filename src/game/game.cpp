@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "../states/gameState.hpp"
+#include "../states/menuState.hpp"
 
 void game::initializeWindow()
     {
@@ -26,20 +27,28 @@ void game::initialize()
         initializeWindow();
         initializeTextures();
         initializeSounds();
-
     }
 
 void game::cleanup()
     {
         delete app;
         app = nullptr;
+
+        if (globals::_stateMachine.getAllStates()->empty())
+            {
+                for (auto &state : *globals::_stateMachine.getAllStates())
+                    {
+                        globals::_stateMachine.popState();
+                    }
+            }
     }
 
 void game::start()
     {
         initialize();
 
-        globals::_stateMachine.queueState(new gameState(app->getSize(), 1000, gameState::E_V_E));
+        globals::_stateMachine.queueState(new gameState(app->getSize(), 0, gameState::NEVER_ENDING_E_V_E));
+        globals::_stateMachine.queueState(new menuState(*app));
 
         sf::Clock deltaClock; 
         deltaClock.restart();
@@ -70,4 +79,11 @@ void game::start()
             }
 
         cleanup();
+        globals::_stateMachine.cleanup();
+    }
+
+game::~game()
+    {
+        cleanup();
+        globals::_stateMachine.cleanup();
     }

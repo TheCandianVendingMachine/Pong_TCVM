@@ -15,6 +15,7 @@ class score
             score();
 
             void increment();
+            void setScore(int amount);
 
             int getScore() const;
             const std::string &getScoreAsString();

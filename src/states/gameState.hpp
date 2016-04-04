@@ -21,8 +21,13 @@ class gameState : public state
             enum gameMode
                 {
                     E_V_E,
+                    NEVER_ENDING_E_V_E,
+
                     P_V_E,
-                    P_V_P
+                    NEVER_ENDING_P_V_E,
+
+                    P_V_P,
+                    NEVER_ENDING_P_V_P
                 };
 
         private:
@@ -39,7 +44,11 @@ class gameState : public state
             sf::Vector2f _goalLeft;
             sf::Vector2f _goalRight;
 
+            sf::Vector2u _windowSize;
+
             bool _gameOver;
+            bool _neverEnding;
+
             const int _maxScore;
 
             gameMode _currentMode;
@@ -47,9 +56,14 @@ class gameState : public state
         public:
             gameState() = default;
             gameState(sf::Vector2u windowSize, const int maxScore, gameMode mode);
+
+            void initialize();
+
+            void setGameMode(gameMode mode);
             
             void render(sf::RenderWindow &app);
             void update(sf::Time deltaTime);
             
+            void cleanup();
             ~gameState();
     };
