@@ -56,6 +56,17 @@ void checkBox::setSize(sf::Vector2f size)
         setSize(size.x, size.y);
     }
 
+void checkBox::setTextSize(float X, float Y)
+    {
+        _preButtonText.scale(X / _preButtonText.getGlobalBounds().width, Y / _button.getGlobalBounds().height);
+        setPosition(_preButtonText.getPosition());
+    }
+
+void checkBox::setTextSize(sf::Vector2f size)
+    {
+        setTextSize(size.x, size.y);
+    }
+
 void checkBox::setColour(sf::Color colour)
     {
         _preButtonText.setColor(colour);

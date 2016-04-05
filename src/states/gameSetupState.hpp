@@ -6,6 +6,7 @@
 
 #include "../UI/clickableButton.hpp"
 #include "../UI/checkBox.hpp"
+#include "../UI/radioButton.hpp"
 
 #include <vector>
 
@@ -16,7 +17,8 @@ class gameSetupState : public state
             clickableButton _back;
 
             // what game mode it will be. Versus AI, versus Player
-            checkBox _gameMode;
+            radioButton _gameModePVE;
+            radioButton _gameModePVP;
 
             // never ending mode, on or off
             checkBox _neverEnding;

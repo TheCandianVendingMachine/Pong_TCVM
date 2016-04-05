@@ -1,39 +1,17 @@
 // radioButton.hpp
-// a toggleable button. Very simple
+// button that can only have 1 selected in a group
 #pragma once
 
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include "button.hpp"
+#include "checkBox.hpp"
 
-class radioButton : public button
+class radioButton : public checkBox
     {
         private:
-            sf::Sprite _button;
-
-            sf::Texture *_toggledTexture;
-            sf::Texture *_nonToggledTexture;
-            
-            bool _toggle;
-            bool _clicked;
-
-        private:
-            void setButtonTexture();
+            std::vector<radioButton*> _otherButtons;
 
         public:
-            radioButton();
+            void addLinkedButton(radioButton *button);
 
-            void setTextures(sf::Texture *toggled, sf::Texture *nonToggled);
-            void setPosition(sf::Vector2f pos);
-            void setScale(float amount);
-            
-            void setSize(float X, float Y);
-            void setSize(sf::Vector2f size);
-
-            const bool getToggled() const;
-            sf::Sprite *getButton();
-
-
-            void render(sf::RenderWindow &app);
             void update();
+
     };

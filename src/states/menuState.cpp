@@ -18,8 +18,8 @@ menuState::menuState()
                           (app->getSize().y / 2) - (_start.getText()->getLocalBounds().height / 2) - 30));
         _start.setFunction([] () 
             {
-                globals::_stateMachine.queueState(new gameSetupState);
                 globals::_stateMachine.popState();
+                globals::_stateMachine.queueState(new gameSetupState);
             });
 
         _quit.setString("Quit Game");

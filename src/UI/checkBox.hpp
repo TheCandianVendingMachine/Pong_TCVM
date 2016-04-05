@@ -10,7 +10,7 @@
 
 class checkBox : public button
     {
-        private:
+        protected:
             sf::Sprite _button;
             sf::Text _preButtonText;
 
@@ -20,7 +20,7 @@ class checkBox : public button
             bool _toggle;
             bool _clicked;
 
-        private:
+        protected:
             void setButtonTexture();
 
         public:
@@ -33,6 +33,9 @@ class checkBox : public button
             void setSize(float X, float Y);
             void setSize(sf::Vector2f size);
 
+            void setTextSize(float X, float Y);
+            void setTextSize(sf::Vector2f size);
+
             void setColour(sf::Color colour);
 
             void setPreButtonString(const std::string &text);
@@ -44,5 +47,5 @@ class checkBox : public button
             sf::Sprite *getButton();
 
             void render(sf::RenderWindow &app);
-            void update();
+            virtual void update();
     };
