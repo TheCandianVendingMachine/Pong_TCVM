@@ -3,7 +3,6 @@
 #pragma once
 
 #include "../UI/clickableButton.hpp"
-#include "../UI/radioButton.hpp"
 #include "state.hpp"
 
 class menuState : public state
@@ -13,9 +12,9 @@ class menuState : public state
             clickableButton _quit;
 
         public:
-            menuState(sf::RenderWindow &app);
+            menuState();
 
-            void render(sf::RenderWindow &app);
+            void render();
             void update(sf::Time deltaTime);
 
             void initialize();

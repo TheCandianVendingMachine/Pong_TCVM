@@ -5,24 +5,27 @@
 
 void button::_checkForMouse()
     {
-        sf::Vector2i mousePos = sf::Mouse::getPosition(*_app);
-        sf::Vector2f mousePosFloat(mousePos.x, mousePos.y);
-
-        if (_bounds.contains(mousePosFloat))
+        if (_app)
             {
-                _mouseOver = true;
-                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                sf::Vector2i mousePos = sf::Mouse::getPosition(*_app);
+                sf::Vector2f mousePosFloat(mousePos.x, mousePos.y);
+
+                if (_bounds.contains(mousePosFloat))
                     {
-                        _buttonClicked = true;
+                        _mouseOver = true;
+                        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                            {
+                                _buttonClicked = true;
+                            }
+                        else
+                            {
+                                _buttonClicked = false;
+                            }
                     }
                 else
                     {
-                        _buttonClicked = false;
+                        _mouseOver = false;
                     }
-            }
-        else
-            {
-                _mouseOver = false;
             }
     }
 
@@ -30,6 +33,8 @@ button::button()
     {
         _buttonClicked = false;
         _mouseOver = false;
+
+        _app = nullptr;
     }
 
 void button::setWindow(sf::RenderWindow &app)

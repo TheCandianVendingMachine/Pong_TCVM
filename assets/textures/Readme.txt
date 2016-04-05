@@ -1,0 +1,1 @@
+Whole bunch of different white squares

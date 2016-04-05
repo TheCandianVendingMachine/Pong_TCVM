@@ -55,13 +55,13 @@ class gameState : public state
 
         public:
             gameState() = default;
-            gameState(sf::Vector2u windowSize, const int maxScore, gameMode mode);
+            gameState(const int maxScore, gameMode mode);
 
             void initialize();
 
             void setGameMode(gameMode mode);
             
-            void render(sf::RenderWindow &app);
+            void render();
             void update(sf::Time deltaTime);
             
             void cleanup();

@@ -18,9 +18,11 @@ void stateMachine::popStateFromStack()
             }
     }
 
-stateMachine::stateMachine()
+stateMachine::stateMachine(sf::RenderWindow *window)
     {
         _popState = false;
+        _closeWindow = false;
+        _window = window;
     }
 
 void stateMachine::queueState(state *newState)
@@ -69,8 +71,15 @@ state *stateMachine::getStateUnderneath()
         return nullptr;
     }
 
-void stateMachine::tick(sf::RenderWindow &app, sf::Time deltaTime)
+void stateMachine::tick(sf::Time deltaTime)
     {
+        // check if someone wants to close the window
+        // do this at the start of the loop so it doesnt happen inbetween rendering and updating    
+        if (_closeWindow)
+            {
+                _window->close();
+            }
+
         // check if a state is popped
         // We need this flag so a state isnt popped/cleaned up mid render/update. If it does happen, program crashes
         if (_popState)
@@ -89,19 +98,19 @@ void stateMachine::tick(sf::RenderWindow &app, sf::Time deltaTime)
                     }
             }
         
-        handleInput(app);
+        handleInput();
         update(deltaTime);
     }
 
-void stateMachine::handleInput(sf::RenderWindow &app)
+void stateMachine::handleInput()
     {
         sf::Event event;
-        while (app.pollEvent(event))
+        while (_window->pollEvent(event))
             {
                 switch (event.type)
                     {
                         case sf::Event::Closed:
-                            app.close();
+                            _window->close();
                             break;
                         case sf::Event::KeyPressed:
                             break;
@@ -129,9 +138,9 @@ void stateMachine::update(sf::Time deltaTime)
             }
     }
 
-void stateMachine::render(sf::RenderWindow &app)
+void stateMachine::render()
     {
-        app.clear(sf::Color::Black);
+        _window->clear(sf::Color::Black);
         if (!_currentStates.empty())
             {
                 for (int i = (_currentStates.size() - 1); i >= 0; i--)
@@ -142,7 +151,7 @@ void stateMachine::render(sf::RenderWindow &app)
                         
                         if (!_currentStates[i]->renderOvertop())
                             {
-                                _currentStates[i]->render(app);
+                                _currentStates[i]->render();
                                 break;
                             }
                         else
@@ -152,18 +161,33 @@ void stateMachine::render(sf::RenderWindow &app)
                                 if (i >= 1)
                                     {
                                         // if so, render that state
-                                        _currentStates[i - 1]->render(app);
+                                        _currentStates[i - 1]->render();
                                         // and increment the count down so the state underneath doesnt render over the current state
-                                        _currentStates[i--]->render(app);
+                                        _currentStates[i--]->render();
                                     }
                                 else// otherwise render like normal
                                     {
-                                        _currentStates[i]->render(app);
+                                        _currentStates[i]->render();
                                     }
                             }
                     }
             }
-        app.display();
+        _window->display();
+    }
+
+void stateMachine::closeWindow()
+    {
+        _closeWindow = true;
+    }
+
+sf::RenderWindow *stateMachine::getWindow() const
+    {
+        return _window;
+    }
+
+void stateMachine::setWindow(sf::RenderWindow *window)
+    {
+        _window = window;
     }
 
 void stateMachine::cleanup()

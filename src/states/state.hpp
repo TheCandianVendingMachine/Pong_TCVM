@@ -22,7 +22,7 @@ class state
         public:
             state() = default;
 
-            virtual void render(sf::RenderWindow &app) = 0;
+            virtual void render() = 0;
             virtual void update(sf::Time deltaTime) = 0;
 
             virtual void initialize() = 0;

@@ -30,6 +30,8 @@ void game::initialize()
         initializeWindow();
         initializeTextures();
         initializeSounds();
+
+        globals::_stateMachine.setWindow(app);
     }
 
 void game::cleanup()
@@ -50,8 +52,8 @@ void game::start()
     {
         initialize();
 
-        globals::_stateMachine.queueState(new gameState(app->getSize(), 0, gameState::NEVER_ENDING_E_V_E));
-        globals::_stateMachine.queueState(new menuState(*app));
+        globals::_stateMachine.queueState(new gameState(0, gameState::NEVER_ENDING_E_V_E));
+        globals::_stateMachine.queueState(new menuState());
 
         sf::Clock deltaClock; 
         deltaClock.restart();
@@ -73,12 +75,12 @@ void game::start()
                     {
                         if (app->hasFocus())
                             {
-                                globals::_stateMachine.tick(*app, deltaTime);
+                                globals::_stateMachine.tick(deltaTime);
                             }
                         accumulator -= updateTime;
                     }
 
-                globals::_stateMachine.render(*app);
+                globals::_stateMachine.render();
             }
 
         cleanup();

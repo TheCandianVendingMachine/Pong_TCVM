@@ -12,20 +12,24 @@ class state;
 class stateMachine
     {
         private:
+            sf::RenderWindow *_window;
+
             std::vector<state*> _currentStates;
             std::queue<state*> _queuedState;
 
             // handles input for the current tick
-            void handleInput(sf::RenderWindow &app);
+            void handleInput();
             // update the current state
             void update(sf::Time deltaTime);
 
             bool _popState;
+            bool _closeWindow;
 
             void popStateFromStack();
 
         public:
-            stateMachine();
+            stateMachine() = default;
+            stateMachine(sf::RenderWindow *window);
 
             void queueState(state *newState);
             void pushState(state *newState);
@@ -38,9 +42,13 @@ class stateMachine
             state* getStateUnderneath();
 
             // handles current tick
-            void tick(sf::RenderWindow &app, sf::Time deltaTime);
+            void tick(sf::Time deltaTime);
             // render the current state
-            void render(sf::RenderWindow &app);
+            void render();
+
+            void closeWindow();
+            sf::RenderWindow *getWindow() const;
+            void setWindow(sf::RenderWindow *window);
 
             void cleanup();
             ~stateMachine();

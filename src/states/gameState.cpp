@@ -1,4 +1,5 @@
 #include "gameState.hpp"
+#include "menuState.hpp"
 
 #include "../entity/paddle.hpp"
 #include "../entity/aiPaddle.hpp"
@@ -9,7 +10,7 @@
 
 #include <SFML/Graphics.hpp>
 
-gameState::gameState(sf::Vector2u windowSize, const int maxScore, gameState::gameMode mode) : _maxScore(maxScore)
+gameState::gameState(const int maxScore, gameState::gameMode mode) : _maxScore(maxScore)
     {
         _state = GAME_STATE;
         _currentMode = mode;
@@ -17,6 +18,8 @@ gameState::gameState(sf::Vector2u windowSize, const int maxScore, gameState::gam
         _renderOvertop = false;
         _updateUnderneath = false;
         _isInitialized = false;
+
+        sf::Vector2u windowSize = globals::_stateMachine.getWindow()->getSize();
 
         _goalLeft = sf::Vector2f(0, 0);
         _goalRight = sf::Vector2f(windowSize.x, windowSize.y);
@@ -92,16 +95,16 @@ void gameState::setGameMode(gameMode mode)
         _currentMode = mode;
     }
 
-void gameState::render(sf::RenderWindow &app)
+void gameState::render()
     {
-        _home->draw(app);
-        _away->draw(app);
-        _ball->draw(app);
-        _scoreManager.render(app);
+        _home->draw(*globals::_stateMachine.getWindow());
+        _away->draw(*globals::_stateMachine.getWindow());
+        _ball->draw(*globals::_stateMachine.getWindow());
+        _scoreManager.render(*globals::_stateMachine.getWindow());
 
         if (_gameOver)
             {
-                app.draw(_gameOverText);
+                globals::_stateMachine.getWindow()->draw(_gameOverText);
             }
     }
 
@@ -110,8 +113,6 @@ void gameState::update(sf::Time deltaTime)
         if (!_gameOver)
             {
                 _home->update(deltaTime);
-
-                //_away->updateBallPos(_ball->getPosition(), _ball->getImpulse(), deltaTime);
                 _away->update(deltaTime);
 
                 _ball->collide(*_home->getSprite());
@@ -158,6 +159,7 @@ void gameState::update(sf::Time deltaTime)
 
         if ((_endGameCountdown.hasCountdownFinished() && _gameOver))
             {
+                globals::_stateMachine.queueState(new menuState());
                 globals::_stateMachine.popState();
             }
     }
