@@ -13,9 +13,10 @@ void stateMachine::popStateFromStack()
                     {
                         _currentStates.back()->cleanup();
                         _currentStates.pop_back();
-                        _popState = false;
                     }
             }
+
+        _popState = false;
     }
 
 stateMachine::stateMachine(sf::RenderWindow *window)
@@ -33,7 +34,6 @@ void stateMachine::queueState(state *newState)
 void stateMachine::pushState(state *newState)
     {
         _currentStates.push_back(newState);
-        _currentStates.back()->initialize();
     }
 
 void stateMachine::popState()
