@@ -139,10 +139,27 @@ void stateMachine::render(sf::RenderWindow &app)
                         // render the state and check if they want to render overtop
                         // if they dont want to render overtop, break out of the loop
                         // if so, continue down the stack
-                        _currentStates[i]->render(app);
+                        
                         if (!_currentStates[i]->renderOvertop())
                             {
+                                _currentStates[i]->render(app);
                                 break;
+                            }
+                        else
+                            {
+                                // if the state wants to be rendered overtop the current state
+                                // check if there is any state underneath
+                                if (i >= 1)
+                                    {
+                                        // if so, render that state
+                                        _currentStates[i - 1]->render(app);
+                                        // and increment the count down so the state underneath doesnt render over the current state
+                                        _currentStates[i--]->render(app);
+                                    }
+                                else// otherwise render like normal
+                                    {
+                                        _currentStates[i]->render(app);
+                                    }
                             }
                     }
             }

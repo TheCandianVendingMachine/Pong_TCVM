@@ -9,32 +9,26 @@
 
 class button
     {
-        private:
+        protected:
             sf::RenderWindow *_app;
+            sf::FloatRect _bounds;
 
-            sf::Text _text;
-            sf::Color _textColour;
+            bool _buttonClicked;
+            bool _mouseOver;
 
-            std::function<void()> _onButtonPress;
+        protected:
+            void _checkForMouse();
 
         public:
             button();
             
             void setWindow(sf::RenderWindow &app);
 
-            void setString(const std::string &buttonText);
-            void setFunction(std::function<void()> onButtonPress);
-            
-            void setColour(sf::Color colour);
-            void setSize(unsigned int size);
-            void setPosition(sf::Vector2f pos);
-
             sf::Vector2f getPosition();
 
-            sf::Text *getText();
+            virtual void update() = 0;
+            virtual void render(sf::RenderWindow &app) = 0;
 
-            void update();
-            void render(sf::RenderWindow &app);
+            virtual ~button();
 
-            const std::string &getString();
     };

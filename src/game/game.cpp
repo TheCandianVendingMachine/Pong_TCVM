@@ -19,6 +19,9 @@ void game::initializeTextures()
         globals::_textureManager.add("assets/textures/paddle.png", "paddleTexture");
         globals::_textureManager.add("assets/textures/ball.png", "ballTexture");
 
+        globals::_textureManager.add("assets/textures/checkbox_check.png", "checkboxCheck");
+        globals::_textureManager.add("assets/textures/checkbox_no_check.png", "checkboxNoCheck");
+
         globals::_fontManager.add("assets/font/Squares_Bold_Free.otf", "gameFont");
     }
 

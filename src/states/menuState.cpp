@@ -25,7 +25,6 @@ menuState::menuState(sf::RenderWindow &app)
         _quit.setWindow(app);
         _quit.setPosition(sf::Vector2f((app.getSize().x / 2) - (_quit.getText()->getLocalBounds().width / 2),
                           (app.getSize().y / 2) - (_quit.getText()->getLocalBounds().height / 2) + 30));
-
         _quit.setFunction([&app] () 
             {
                 app.close();
