@@ -7,6 +7,9 @@
 
 class player : public paddle
     {
+        private:
+            static bool _secondPlayer;
+
         public:
             player(float maxHeight, float minHeight, sf::Vector2f startPos);
 
