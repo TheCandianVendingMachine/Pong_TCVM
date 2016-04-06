@@ -16,12 +16,14 @@ ball::ball(sf::Vector2u windowSize)
         _windowSize = windowSize;
 
         _sprite.setTexture(*globals::_textureManager.get("ballTexture"));
+
+        _gameStartDirectionModifier = -1;
     }
 
 void ball::initialize()
     {
         _sprite.setPosition(_startPos);
-        _impulse = sf::Vector2f(_speed, 0);
+        _impulse = sf::Vector2f(_speed * _gameStartDirectionModifier, 0);
     }
 
 void ball::update(sf::Time deltaTime)
@@ -47,6 +49,11 @@ void ball::update(sf::Time deltaTime)
             }
 
         _sprite.move(_impulse * deltaTime.asSeconds());
+    }
+
+void ball::setGameStartDirection(int direction)
+    {
+        _gameStartDirectionModifier = direction;
     }
 
 /* use basic overlap check to check for collision */

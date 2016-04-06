@@ -6,8 +6,11 @@
 
 class ball : public entity
     {
+        private:
             sf::Vector2u _windowSize;
             sf::Vector2f _startPos;
+
+            int _gameStartDirectionModifier;
 
             const float _speed;
             const float _minSpeed;
@@ -18,6 +21,8 @@ class ball : public entity
             void initialize();
 
             void update(sf::Time deltaTime);
+
+            void setGameStartDirection(int direction);
 
             void collide(sf::Sprite &other);
 

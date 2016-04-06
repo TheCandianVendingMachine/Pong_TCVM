@@ -1,20 +1,26 @@
 // input.hpp
-// what defines an input. inputManager handles this
+// input object. What will happen when key is pressed, and what state it will be active in
 #pragma once
 
-#include <functional>
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/Event.hpp>
+
+#include <functional>
+
+#include "../../states/states.hpp"
 
 class input
     {
         private:
-            std::function<void()> _onKeyPress;
-            sf::Keyboard::Key _key;
+            sf::Keyboard::Key _input;
+
+            std::function<void()> _onInput;
+            bool _onPress;
+
+            states _activeState;
 
         public:
-            input() = default;
-            input(sf::Keyboard::Key key, std::function<void()> function);
-            void handle();
+            input(sf::Keyboard::Key key, std::function<void()> onInput, bool onPress, states activeState);
+            void execute(sf::Event &event, states active);
 
-            const sf::Keyboard::Key getKey() const;
     };

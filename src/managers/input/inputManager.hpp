@@ -1,19 +1,21 @@
 // inputManager.hpp
-// manges all inputs in the game.
+// manages inputs. Can manage mosue and keyboard input
 #pragma once
 
-#include <unordered_map>
+#include <vector>
+#include <functional>
+
 #include <SFML/Window/Keyboard.hpp>
-#include <string>
+
 #include "input.hpp"
 
 class inputManager
     {
         private:
-            // all inputs that are mapped. Has the input ID and the input
-            std::unordered_map<std::string, input> _inputs;
+            std::vector<input> _inputs;
 
         public:
-            void handleInput(sf::Keyboard::Key key);
-            void map(const std::string &name, sf::Keyboard::Key key, std::function<void()> functionOnActive);
+            void add(sf::Keyboard::Key key, std::function<void()> onInput, bool onPress, states activeState);
+            void handleInput(sf::Event &event, states currentState);
+
     };

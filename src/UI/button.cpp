@@ -47,6 +47,11 @@ sf::Vector2f button::getPosition()
         return sf::Vector2f(_bounds.left, _bounds.top);
     }
 
+sf::FloatRect button::getBounds() const
+    {
+        return _bounds;
+    }
+
 void button::update()
     {
 

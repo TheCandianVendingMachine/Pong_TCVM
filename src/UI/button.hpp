@@ -25,6 +25,7 @@ class button
             void setWindow(sf::RenderWindow &app);
 
             sf::Vector2f getPosition();
+            sf::FloatRect getBounds() const;
 
             virtual void update() = 0;
             virtual void render(sf::RenderWindow &app) = 0;

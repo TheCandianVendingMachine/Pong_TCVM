@@ -107,6 +107,8 @@ void stateMachine::handleInput()
         sf::Event event;
         while (_window->pollEvent(event))
             {
+                globals::_keyboardManager.handleInput(event, _currentStates.back()->getState());
+
                 switch (event.type)
                     {
                         case sf::Event::Closed:

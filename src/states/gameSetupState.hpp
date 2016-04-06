@@ -23,9 +23,6 @@ class gameSetupState : public state
             // never ending mode, on or off
             checkBox _neverEnding;
 
-            // the max score for the game
-            // textBox _maxScore; // TO BE IMPLEMENTED
-
             std::vector<button*> _allButtons;
 
         public:

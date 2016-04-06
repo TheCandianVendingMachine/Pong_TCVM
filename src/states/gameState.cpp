@@ -125,6 +125,8 @@ void gameState::update(sf::Time deltaTime)
                 if (_ball->getPosition().x > _goalRight.x)
                     {
                         _scoreManager.incrementScore("leftGoal");
+                        _ball->setGameStartDirection(1);
+
                         if (_scoreManager.getScore("leftGoal")->getScore() >= _maxScore && !_neverEnding)
                             {
                                 _gameOverText.setString("Left Wins!");
@@ -135,9 +137,11 @@ void gameState::update(sf::Time deltaTime)
                                                           _gameOverText.getPosition().y - (_gameOverText.getLocalBounds().height / 2));
                             }
                     }
-                else
+                else if (_ball->getPosition().x < _goalLeft.x)
                     {
                         _scoreManager.incrementScore("rightGoal");
+                        _ball->setGameStartDirection(-1);
+
                         if (_scoreManager.getScore("rightGoal")->getScore() >= _maxScore&& !_neverEnding)
                             {
                                 _gameOverText.setString("Right Wins!");

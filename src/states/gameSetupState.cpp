@@ -68,7 +68,6 @@ void gameSetupState::initialize()
         _neverEnding.setPosition(sf::Vector2f(halfWindowSize.x - (_neverEnding.getText()->getLocalBounds().width / 2),
                                  halfWindowSize.y + (spacing * 1.5) - (_neverEnding.getText()->getLocalBounds().height / 2)));
 
-
         _confirm.setWindow(*app);
         _confirm.setString("Confirm and Play");
         _confirm.setColour(sf::Color::Red);
@@ -101,7 +100,7 @@ void gameSetupState::initialize()
                     }
 
                 globals::_stateMachine.popState();
-                globals::_stateMachine.queueState(new gameState(/*_maxScore.getValue()*/1, selectedMode));
+                globals::_stateMachine.queueState(new gameState(10, selectedMode));
             });
 
         _back.setWindow(*app);
