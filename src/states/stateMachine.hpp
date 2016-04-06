@@ -23,6 +23,8 @@ class stateMachine
             void update(sf::Time deltaTime);
 
             bool _popState;
+            int _amountToPop;
+
             bool _closeWindow;
 
             void popStateFromStack();
@@ -34,6 +36,7 @@ class stateMachine
             void queueState(state *newState);
             void pushState(state *newState);
             void popState();
+            void popAllStates();
             void reinitState();
 
             state* getCurrentState() const;

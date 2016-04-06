@@ -24,3 +24,8 @@ player::player(float maxHeight, float minHeight, sf::Vector2f startPos) : paddle
 
         _secondPlayer = true;
     }
+
+player::~player()
+    {
+        _secondPlayer = false;
+    }

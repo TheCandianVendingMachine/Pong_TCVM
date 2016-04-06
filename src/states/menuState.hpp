@@ -2,14 +2,19 @@
 // the menu for the game. Opens on game start, and menu opened
 #pragma once
 
+#include <vector>
+
+#include "../UI/button.hpp"
 #include "../UI/clickableButton.hpp"
 #include "state.hpp"
 
 class menuState : public state
     {
-        private:
+        protected:
             clickableButton _start;
             clickableButton _quit;
+
+            std::vector<button*> _buttons;
 
         public:
             menuState();
@@ -20,5 +25,5 @@ class menuState : public state
             void initialize();
 
             void cleanup();
-            ~menuState();
+            virtual ~menuState();
     };

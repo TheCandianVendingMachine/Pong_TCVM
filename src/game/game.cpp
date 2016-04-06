@@ -32,6 +32,8 @@ void game::initialize()
         initializeSounds();
 
         globals::_stateMachine.setWindow(app);
+
+        globals::_keyboardManager.add(sf::Keyboard::Escape, [] () { globals::_stateMachine.popState(); }, true, PAUSE_MENU_STATE);
     }
 
 void game::cleanup()

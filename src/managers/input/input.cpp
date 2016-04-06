@@ -18,3 +18,13 @@ void input::execute(sf::Event &event, states active)
                 _onInput();
             }
     }
+
+sf::Keyboard::Key input::getInput() const
+    {
+        return _input;
+    }
+
+states input::getState() const
+    {
+        return _activeState;
+    }

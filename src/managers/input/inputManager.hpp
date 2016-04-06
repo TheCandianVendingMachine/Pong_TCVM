@@ -16,6 +16,8 @@ class inputManager
 
         public:
             void add(sf::Keyboard::Key key, std::function<void()> onInput, bool onPress, states activeState);
+            void remove(sf::Keyboard::Key key, states state);
+
             void handleInput(sf::Event &event, states currentState);
 
     };

@@ -8,11 +8,27 @@ void stateMachine::popStateFromStack()
     {
         if (!_currentStates.empty())
             {
-                // if the state isnt nullptr
-                if (_currentStates.back())
+                int amount = _amountToPop;
+                for (int i = 0; i < amount; i++)
                     {
-                        _currentStates.back()->cleanup();
-                        _currentStates.pop_back();
+                        // if the state isnt nullptr
+                        if (_currentStates.back() && !_currentStates.empty())
+                            {
+                                _currentStates.back()->cleanup();
+                                delete _currentStates.back();
+                                _currentStates.back() = nullptr;
+                                _currentStates.pop_back();
+                            }
+                        else if (!_currentStates.back())
+                            {
+                                _currentStates.pop_back();
+                            }
+                        else
+                            {
+                                break;
+                            }
+
+                        _amountToPop--;
                     }
             }
 
@@ -21,6 +37,8 @@ void stateMachine::popStateFromStack()
 
 stateMachine::stateMachine(sf::RenderWindow *window)
     {
+        _amountToPop = 0;
+
         _popState = false;
         _closeWindow = false;
         _window = window;
@@ -39,6 +57,13 @@ void stateMachine::pushState(state *newState)
 void stateMachine::popState()
     {
         _popState = true;
+        _amountToPop++;
+    }
+
+void stateMachine::popAllStates()
+    {
+        _popState = true;
+        _amountToPop = _currentStates.size();
     }
 
 void stateMachine::reinitState()

@@ -6,5 +6,6 @@ enum states
     {
         GAME_STATE,
         MENU_STATE,
+        PAUSE_MENU_STATE,
         GAMEPLAY_OPTION_STATE
     };

@@ -99,7 +99,7 @@ void gameSetupState::initialize()
                             }
                     }
 
-                globals::_stateMachine.popState();
+                globals::_stateMachine.popAllStates();
                 globals::_stateMachine.queueState(new gameState(10, selectedMode));
             });
 

@@ -12,5 +12,6 @@ class player : public paddle
 
         public:
             player(float maxHeight, float minHeight, sf::Vector2f startPos);
+            ~player();
 
     };

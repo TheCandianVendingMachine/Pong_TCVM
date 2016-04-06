@@ -23,4 +23,7 @@ class input
             input(sf::Keyboard::Key key, std::function<void()> onInput, bool onPress, states activeState);
             void execute(sf::Event &event, states active);
 
+            sf::Keyboard::Key getInput() const;
+            states getState() const;
+
     };

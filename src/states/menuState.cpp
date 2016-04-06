@@ -31,18 +31,25 @@ menuState::menuState()
             {
                 globals::_stateMachine.closeWindow();
             });
+
+        _buttons.push_back(&_start);
+        _buttons.push_back(&_quit);
     }
 
 void menuState::render()
     {
-        _start.render(*globals::_stateMachine.getWindow());
-        _quit.render(*globals::_stateMachine.getWindow());
+        for (auto &but : _buttons)
+            {
+                but->render(*globals::_stateMachine.getWindow());
+            }
     }
 
 void menuState::update(sf::Time deltaTime)
     {
-        _start.update();
-        _quit.update();
+        for (auto &but : _buttons)
+            {
+                but->update();
+            }
     }
 
 void menuState::initialize()

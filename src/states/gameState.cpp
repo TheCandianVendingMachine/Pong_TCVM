@@ -1,5 +1,5 @@
 #include "gameState.hpp"
-#include "menuState.hpp"
+#include "pauseMenuState.hpp"
 
 #include "../entity/paddle.hpp"
 #include "../entity/aiPaddle.hpp"
@@ -12,6 +12,8 @@
 
 gameState::gameState(const int maxScore, gameState::gameMode mode) : _maxScore(maxScore)
     {
+        globals::_keyboardManager.remove(sf::Keyboard::Escape, GAME_STATE);
+
         _state = GAME_STATE;
         _currentMode = mode;
 
@@ -41,6 +43,11 @@ gameState::gameState(const int maxScore, gameState::gameMode mode) : _maxScore(m
 
 void gameState::initialize()
     {
+        // make sure the pause menu can never be acheived from the main game state
+        if (_currentMode > NEVER_ENDING_E_V_E)
+            {
+                globals::_keyboardManager.add(sf::Keyboard::Escape, [this] (){ globals::_stateMachine.queueState(new pauseMenuState()); }, true, _state);
+            }
         const int distanceFromWall = 30;
         _isInitialized = true;
 
@@ -163,6 +170,7 @@ void gameState::update(sf::Time deltaTime)
 
         if ((_endGameCountdown.hasCountdownFinished() && _gameOver))
             {
+                globals::_stateMachine.queueState(new gameState(0, NEVER_ENDING_E_V_E));
                 globals::_stateMachine.queueState(new menuState());
                 globals::_stateMachine.popState();
             }
