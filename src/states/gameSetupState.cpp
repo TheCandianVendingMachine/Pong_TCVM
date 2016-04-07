@@ -12,9 +12,6 @@ gameSetupState::gameSetupState()
         _updateUnderneath = true;
         _isInitialized = false;
         _state = GAMEPLAY_OPTION_STATE;
-
-
-        initialize();
     }
 
 void gameSetupState::render()

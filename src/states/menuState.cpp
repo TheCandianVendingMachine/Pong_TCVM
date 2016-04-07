@@ -8,7 +8,27 @@ menuState::menuState()
         _updateUnderneath = true;
         _isInitialized = false;
         _state = MENU_STATE;
+    }
 
+void menuState::render()
+    {
+        for (auto &but : _buttons)
+            {
+                but->render(*globals::_stateMachine.getWindow());
+            }
+    }
+
+void menuState::update(sf::Time deltaTime)
+    {
+        for (auto &but : _buttons)
+            {
+                but->update();
+            }
+    }
+
+void menuState::initialize()
+    {
+        _isInitialized = true;
         auto app = globals::_stateMachine.getWindow();
 
         _start.setString("Start Game");
@@ -34,27 +54,6 @@ menuState::menuState()
 
         _buttons.push_back(&_start);
         _buttons.push_back(&_quit);
-    }
-
-void menuState::render()
-    {
-        for (auto &but : _buttons)
-            {
-                but->render(*globals::_stateMachine.getWindow());
-            }
-    }
-
-void menuState::update(sf::Time deltaTime)
-    {
-        for (auto &but : _buttons)
-            {
-                but->update();
-            }
-    }
-
-void menuState::initialize()
-    {
-        _isInitialized = true;
     }
 
 void menuState::cleanup()

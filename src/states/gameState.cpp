@@ -20,7 +20,10 @@ gameState::gameState(const int maxScore, gameState::gameMode mode) : _maxScore(m
         _renderOvertop = false;
         _updateUnderneath = false;
         _isInitialized = false;
+    }
 
+void gameState::initialize()
+    {
         sf::Vector2u windowSize = globals::_stateMachine.getWindow()->getSize();
 
         _goalLeft = sf::Vector2f(0, 0);
@@ -38,16 +41,12 @@ gameState::gameState(const int maxScore, gameState::gameMode mode) : _maxScore(m
         _gameOverText.setCharacterSize(70);
         _gameOverText.setPosition(windowSize.x / 2, windowSize.y / 2);
 
-        initialize();
-    }
-
-void gameState::initialize()
-    {
         // make sure the pause menu can never be acheived from the main game state
         if (_currentMode > NEVER_ENDING_E_V_E)
             {
                 globals::_keyboardManager.add(sf::Keyboard::Escape, [this] (){ globals::_stateMachine.queueState(new pauseMenuState()); }, true, _state);
             }
+
         const int distanceFromWall = 30;
         _isInitialized = true;
 

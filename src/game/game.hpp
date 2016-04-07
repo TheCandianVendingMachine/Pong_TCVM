@@ -14,6 +14,7 @@ class game
             void initializeWindow();
             void initializeSounds();
             void initializeTextures();
+            void initializeControls();
             void initialize();
 
             void cleanup();

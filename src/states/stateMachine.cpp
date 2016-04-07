@@ -51,6 +51,7 @@ void stateMachine::queueState(state *newState)
 
 void stateMachine::pushState(state *newState)
     {
+        newState->initialize();
         _currentStates.push_back(newState);
     }
 

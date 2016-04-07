@@ -25,15 +25,19 @@ void game::initializeTextures()
         globals::_fontManager.add("assets/font/Squares_Bold_Free.otf", "gameFont");
     }
 
+void game::initializeControls()
+    {
+        globals::_keyboardManager.add(sf::Keyboard::Escape, [] () { globals::_stateMachine.popState(); }, true, PAUSE_MENU_STATE);
+    }
+
 void game::initialize()
     {
         initializeWindow();
         initializeTextures();
         initializeSounds();
+        initializeControls();
 
         globals::_stateMachine.setWindow(app);
-
-        globals::_keyboardManager.add(sf::Keyboard::Escape, [] () { globals::_stateMachine.popState(); }, true, PAUSE_MENU_STATE);
     }
 
 void game::cleanup()

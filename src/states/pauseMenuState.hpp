@@ -12,4 +12,6 @@ class pauseMenuState : public menuState
         public:
             pauseMenuState();
 
+            void initialize();
+
     };

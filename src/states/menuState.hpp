@@ -22,8 +22,8 @@ class menuState : public state
             void render();
             void update(sf::Time deltaTime);
 
-            void initialize();
+            virtual void initialize();
 
-            void cleanup();
+            virtual void cleanup();
             virtual ~menuState();
     };
